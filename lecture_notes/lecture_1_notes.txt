@@ -1,0 +1,122 @@
+INTRO TO CODING IN PYTHON:
+
+Structure of the language - high level programming and scripting
+
+slows it down, lower level languages like C and Fortran are faster, harder to read
+ways to speed up PYTHON
+    can be written in C (Cython)
+    jit (just in time) compiling
+
+Strength in packages and collabs, add high functionality and free
+
+Install uv (new cooler conda) as the python interpreter
+UV: package manager and project manager, separates each project directory oppose to conda
+    will most likely pay off in the end
+    UV meant to be able to show in TOML file the packages needed for this code, keeps organized down the line
+
+Also fine to stick with conda for this class: 
+
+ELEMENTS OF CODING IN PYTHON:
+
+Variables, Operators, Logic Operators, Control Blocks, Sequences, Loops, Dicts, Funct, Classes
+
+1.) Variables: 
+    Boolean x = True
+    Integer: x = 3
+    Floats: x = 3.12
+    Complex: x = 3 + 5j
+
+casting changes the type: bool(), int(), float(), complex()
+check with type function()
+and also set to None (points to nothing in memory)
+
+2.) Arithmetic Operations: +, -, /, **, //, %
+
+3.) Logic Operators: 
+    = : assignment
+    == : equal
+    != not equal 
+    and, or, not, is (same memory spot, use with None, True, False)
+
+4.) Control Blocks:
+    if/elif/else, do something if condition is met
+
+5.) Sequences:
+    strings, lists (variable with more than one entry) s = "string" or s = 'string'
+    can access elements (loop through string, iterate through list)
+    labels, access via s[i] where i is what you want to access (letter, item in list) (index at 0)
+    + concatenates strings
+    Lists: shopping = ['eggs', 'beer',...] or numbers, or a mix, or a list of lists, or an empty list, 
+    add with list.append(i)
+    len(list) gives length
+
+6.) Loops:
+    while: loops until conditon is met
+    for: loops over a sequence
+    great as computers do many things over and over again
+    can always use both, more naturally one or other but either works
+    while True induces infinite loop, must add break to get out of while loop
+    if sequence, use for loop
+    and create a range (creates a sequence)
+    range(i) creates a seq from 0,1,2,3,4 and can loop
+    useful: enumerate() then also gives number in list
+    zip() goes over both lists of same length and gives both entries print(a,c)
+    
+    list comprehension: fancy for loop in one line: 
+        doubled = [num*2 for num in array]
+         
+        or another way:
+        evendouble = [num*2 for num in array if num%2==0]
+
+        if end thing you want from a for loop is a list:
+
+    Dictionaries: data structure, a sequence with multiple info: key (word) and value(definition)
+    astro_type = {'star':1,'planet':2}
+
+7.) Functions: 
+    code that takes in an operation or input and and return ouputs, makes code reuasabel good programming practice
+    use def factorial(n):
+        f = 1
+        for k in range(1,n+1)
+            f = f*k
+        return f
+
+    indentation matters, return ends the function/for loop, must define before use
+
+    Return, send back info/variables from process, etc, return x,y,z (and you exit function)
+    have to match data type
+
+    Arguments: functions have arguments(argument) positional or keyword (n1,n2,n3) are positional arguments
+    keyword arguments: def length(x,y,z,cm=False)
+
+    ie dont have to pass it, a default setting is already set, 
+    or a plot - dont have to pass color, but you can
+
+8.) Classes - Object Oriented Programming, everything is a class, all python has, main idea is data and functions should be combined together, can see method of class with dir() function
+    functions travel with the data, and complicated classes can make data usefull
+
+    examples with lists: 
+    x = [] # empty list
+    x.append(1) append adds a value to list
+    x.insert(1,'new')
+    print(x.pop(2)) pop gets teh value of an element and removes from list
+    x.remove just removes it
+
+Methods .method are very useful, with lists, strings, dict, all have made methods that are very useful see documentation, splice 
+x[a:b]
+
+Create a class and define methods inside the class, need a special method __init__ whcih runs when you create an instance of the class
+
+2 underscore are special (internal) variable to the program, and 
+
+class code
+def __init__(self,name,grade,major): # special name that will be run when creating instance of class
+    self.name = name
+    self.grade = grade
+    self.major = major
+
+    def passing(self): # a function within this class only
+        function under the class 
+
+
+

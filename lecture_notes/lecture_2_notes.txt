@@ -1,0 +1,141 @@
+LECTURE 2 NOTES: INTRO TO PYTHON AND HOMEWORK SUBMISSION
+
+Command Line Interface, uv, and Git:
+
+interacting with computer, now use GUI (graphical user interface) but also helpful to use a CLI (commmand line interface)
+many reasons to still use CLI
+
+store things in files, collection is directory, and filesystem is structure of folder, .py (python) .iypnb (notebooks)
+can access via terminal, cd commands, and uv directory is important, imports only exist in specific file system
+
+Paths: path to the file, / designate path ie /Users/Jane/Desktop, some op systems have slashes go different way
+pwd gives current location
+cd <dirname> changes dir and tab key finishes words
+ls - list directories
+
+Package Manager: pip or conda (use pip with uv)
+    pip list - show all packages
+    use a single package manager 
+
+VERSION CONTROL:
+    ways to keep track of code and changes to code, and collab w others
+    git is most common way to manage
+    important to keep saved copies of versions of code
+    repositories is where files lie, take out and work on, and then return back to repo
+
+LOCAL COPY you clone then can commit back to repo, and also have branches of different local copies
+
+GitHub is most popular, (used to train ai) but has many very useful repos
+
+create a new repo for hw for comp phys and share with instructor, and use git commands
+
+    git clone <repo url>
+    git add <filename>
+    git commit <update on local machine>
+    git push <adds changes to the repo>
+    git pull <pull any changes to repo back to machine>
+
+better to save in halfway state, and can push updates as you go
+no one understands all of git
+add, commit, push, pull is most of things (see branches later)
+
+share repo with amaller@citytech.cuny.edu
+
+through basic python review, two main packages (libraries) and use them for most of heavy lifting:
+
+NumPy is the main one, numerical python, gives all numerical tools
+    array creation, multidimensional arrays, index, slice, data reading, and more
+    array is a sequence of numbers, but the data type in the array must all be the same data type (oppose to lists)
+    import numpy as np (give it nickname, because you call it a lot)
+    many packages have famous nicknames
+
+ARRAYS:
+    see documenttion to create, but all math works and does this as a vector (does operation to every element of the array)
+    if adding arrays must be same length (same number of elements)
+
+    a.<method> gives many sum, mean, etc techniques
+
+    can also have multidimensional arrays (tensors), and can get out specific elements, good to check its what you think
+    first step to debugging, check data type and array list, big jump, will start in 2d but moce to more
+    can slice arrays same way see documentation, can also slice with true array
+    is a > 5 ? will go element by element, can slice to return only true ones, and thus can create boolean arrays or return only true array things   back
+
+READ TEXT IN NP:
+    data = np.loadtxt('file_name.dat',many options to write to get to read well,...)
+    many code to read the data for you
+    save data np.savetxt('tmp.dat', data, fmt='%.3') to 3 decimal places
+
+ANOTHER PACKAGE: 
+
+Matplotlib - visualisation package in python to use (oldest and most common)
+    import matplotlib.pyplot as plt (famous nickname)
+    must make it show to screen with plt.show
+    or save to file
+    can modify everything in grph, limits, color, line type, labels, legend etc
+    label axis
+
+    we use plots to help check and verify code, many numbers so cant check, must use graph to make sure its sensical
+    can also do scatter plot for data etc, 
+
+SCIPY is everything else numbers can do (much larger than numpy), huge packages like int, diff, stats, etc
+we can use to test our code
+
+    all matplot is from figure and axis, not just the quick plot, this can use many axis, many plots, etc
+
+    many other ways to plot, histograms - good for debuggin, scatter, 
+
+
+OTHER: things to be aware of for research/future (maybe not in this class)
+
+pandas - another way of holding info import pandas as pd 
+    almost the same as np in many ways, just different functionality,
+    pd is built in np, but gives a pd Series, not array, can do many of the same things not all
+    use pandas for 2d array or data tables, designed to be more intuitive for this special type, 
+    has column information, names for column or row, extension of np for data tables (good for ML) - data frame
+
+import seaborn as sns 
+    it is matplotlib, that tries to make nicer plots with less commands
+    can be used to make plots easier, also works well with data frame
+    tables look like tables not just array or 2x2 matrix
+    can use all matplotlib things as well
+
+AI CODING: 
+    almost impossible to have ai not in coding, good or bad ehh, whats happening
+    able to learn, and do what is learned, coding runs or not, so ai can do code well, 
+    quite good, some trouble with jobs, so yes use ai in coding, trained on massive data,
+    and process human language, be human and it can translate to code, 
+    can be beneficial to coding, use as a private tutor, and still study and know everything,
+    don't trust results from ai, will bullshit, wrong, incomplete, hallucinated answers,
+    more clear prompt, more clear code,
+    you must link to rest of code/project
+    don't use and learn nothing
+    most important skills are specifying what you want code to do, and debugging
+    different ai give different answers, 
+    can integrate ai into vscode, can read it all then
+    works on how well you prompt
+
+emphasize understanding in the code - that's why we use and share python
+
+    
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
