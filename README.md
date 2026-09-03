@@ -38,4 +38,4 @@ uv run jupyter lab
 
 ---
 
-*Charles Wade | CWade@evalcompany.com*
+*Charles Wade | charliew0707@gmail.com*
