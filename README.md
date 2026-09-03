@@ -1,8 +1,10 @@
-# Computational Methods in Astrophysics — ASTR 78100
+# Computational Methods in Physics — Phys 78100
 
-Course repository for ASTR 78100 at CUNY, Fall 2025. Taught by Professor Maller, following *Computational Physics* by Mark Newman.
+Course repository for Phys 78100 at CUNY, Fall 2026. Taught by Professor Maller, following *Computational Physics* by Mark Newman.
 
 The course is an introduction to numerical techniques used in physics and astrophysics — topics include numerical integration and differentiation, solving differential equations, Fourier transforms, Monte Carlo methods, and high performance computing, all implemented in Python.
+
+Syllabus: https://compmeth.commons.gc.cuny.edu/
 
 ---
 
