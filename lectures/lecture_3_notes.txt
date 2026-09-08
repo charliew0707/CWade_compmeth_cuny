@@ -1,0 +1,119 @@
+LECTURE 3 NOTES: PYTHON, GENERAL INFO, ACCURACY AND SPEED
+
+see python scripts, start with a shebang line (clear it is a script)
+not used but historical tells info to somene else
+    !#/usr/bin/env python
+
+can make scripts run, must be executable and in the path (list of directories) and searches to see if file needed is in path
+can make a code file system code and more executable (run from terminal)
+
+good form to have 
+if __name__ == "__main__":
+    main()
+
+keeps protection that means that main will not always run, and can therefore use functions from the code
+
+sys.argv: 
+
+    also want to change options or choices well running the code
+    allow code to ask for input, and can run different tests etc
+    can use input functions so code asks for input
+    can also use this to pass things on the command line well prompting the code
+   
+    argparse: create a parser, then add arguments to it, then call parse_args() to call those arguments
+    can also give hints when asking for a prompt, many options, very used, start with basics
+
+    import argparse
+    parser = argparse.ArgumentParser(description='Do Something.')
+    parser.add_argument('h', type-float, help='height of object above the ground') # help is most important
+    add more args
+    args = parser.parse_args() # creates this object
+    args.h will be the object stored as h from the user input
+    keyword arguments must have --argument
+    can control many things, and this package helps a lot with user input
+    must run through command line to pass argument, unless you set default value
+
+set to start on homework, do hw 1 by next tuesday, note to send link and clone, pull, push, commit to add code to repo, and make public
+public repos, good code for other people, easy git commands, etc, python strength is readability and collabs
+One line doc string explaining what function does, add comments about what code does, good practice to start out with
+
+ # START OF CLASS MATERIAL: ACCURACY AND SPEED
+
+numerical techniques are different than the analytical math/technqiques we learn
+similar to theory vs. experiment challenge in viewpoints, communication, etc,
+numerics is a third way
+
+Two main things are in tension with comp algorithms: accuracy and speed
+
+accuracy -- how close the computed number is to the analytical calculation
+speed -- refers to the time (CPU time) it takes to perform the calculation
+
+these are usually in tension, the better one is, the worse the other, must consider the answer
+
+Machine Precision:
+
+Floats are stored on a computer using a fixed number of bits, 
+most comps are double precision now, 
+sign: 1 bit, exponent: 11 bits, significand: 53 bits (52 stored), = 64 bits, 
+so range is ~ 10^308 or accurate to about 15 sigfigs
+good, but finite amount of precision
+
+bring errors: Overflow and Underflow
+
+Computer uses finite amount of bits, so y = 10*1e308 is saved as inf in python, Overflow Error
+similarly in y = 10*1e-308 sets this to 0.0, Underflow error
+code will still run, but a numerical limit, not correct analytical maths
+python will just allocate memory to store integer until you run out
+
+Rounding Error:
+rounded of the number after a maths operation, can't check floata with x == 0.1, as it may be truncated etc, must check with 
+    (abs(x-2.50<epsilon) # checking number is close to 2.5 and epsilon is your desired prec
+
+because numbers are stored in binary, leads to round error etc. 
+rounding error behaves like measurement in lab: 
+    sigma = sqrt (sigma_1^2 + sigma_2^2)
+good to have/know rounding error: 
+error increases with root of sqrt of calcs done, Sqrt(N) fractional error that can become quite small
+but ony works for numbers close in size and addition
+
+subtraction can also lead to bad errors, numbers only saved to 15 places
+consider e^-24 via the taylor series, we find
+S(-24) vs e^(-24) gives an order of 4 magnitude difference - bad answer
+rounding error from the large numbers and small numbers subtracted from eachother
+so must think before: better to compute e(-1)**24 which gives a much better answer as S(-1) is well behaved
+
+careless can lead to wildly different answers -- computer is always an approx to the actual answer, must always verify and check for accuracy 
+
+see volume of a shell: relies on cancellation of two large numbers - BAD 
+rewrite formula to avoid this - must implement math to avoid these errors, roundoff and subtraction errors, number are not math
+accuracy is a fundamental limitation of our system:
+
+SPEED:
+computers also dont have infinite speed, a million calcs in about a second, billion in 20 min, 
+trillion 12 days
+there exists an upper limit, and must game with when you need the calculation
+start with 100, or something to help debug, make sure code does what you want, gives results or prints right, 
+dont want to waste 20 min or make mistake on long loop
+
+quick way to run into too many calcs is matrices, see example exercise
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+            
+    
+    
