@@ -2,7 +2,7 @@
 
 """
 
-Write a program that calculate the time it takes for a ball to drop 
+Write a program to calculate the time it takes for a ball to drop 
 from a user speficified height to reach the ground. Use argparse. 
 Also allow user to choose different values of gravity.
 Add any other features that may be interesting.
@@ -15,12 +15,12 @@ import argparse
 # Function to calculate time for ball to fall from tower:
 
 def time_to_fall(h, g):
-    return round(sqrt((2*h)/g),2)
+    return round(sqrt((2*h)/g),4)
 
 def main():
     parser = argparse.ArgumentParser(description="Freefall Calculator")
-    parser.add_argument("--height", type=float, required=True)
-    parser.add_argument("--gravity", type=float, default=9.8)
+    parser.add_argument("height", type=float, help="Enter height of tower")
+    parser.add_argument("--gravity", type=float, default=9.8, help="Enter gravity of planet")
     args = parser.parse_args()
     print(f"{time_to_fall(args.height, args.gravity)} seconds")
 
