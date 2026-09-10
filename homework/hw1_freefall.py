@@ -12,6 +12,10 @@ Add any other features that may be interesting.
 from math import sqrt
 import argparse
 
+# To improve: add other keywords for different planets maybe use a dict, 
+# add try and except to catch errors, zero division, unphysical inputs
+# add drag to calculation
+
 # Function to calculate time for ball to fall from tower:
 
 def time_to_fall(h, g):

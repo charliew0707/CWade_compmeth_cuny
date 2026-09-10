@@ -1,0 +1,118 @@
+LECTURE NOTES 4: ACCURACY AND SPEED REVIEW, INTEGRATION
+
+See QHO example an know well, will use techniques and sums to help build to integrals
+keep in mind accuracy with steps, limit with errors, round, approximation, and over/underflow errors
+Best you can do is machine precision measured with the errors, can track
+
+VOCAB IMPORTANT: 
+Overflow/Underflow Error
+Rounding/Roundoff Error
+Machine Precision
+
+INTEGRATION:
+
+majority of integrals are not solved analytically, or in closed form
+must use numerics to get answer, and keep track of error to value
+
+1D Integral and Finite Range: F = int from a to b f(x) dx
+
+easiest integration, best place to start, we first look at the Riemann Sum: F = sum i to N f(x_i)delta x make N large and dx small
+gives the ractangular sum of the area under the curve.
+
+Small mod to make this more accurate, and no extra compute, better to do
+
+Trapezoidal Method: errors of the trapezoid are smaller, better approximation to f(x) than rectangular, no extra number of evaluations
+see slides for formula, same sum i = 0 to N f(a + k delta x) but also has endpoints into consideration, see how to write integrals with np
+
+HIGHER ORDER FITS:
+that seemed to work well, can get 4.400 pretty well, we went from rectangular (constant x^0) fit, then trapezoidal (x^1) linear fit, and get a better answer, the next x^2 quadratic fit is Simpsons rule, see notes for same equation, approximating now with quadratics:
+
+end result: 1/3 dx (f(-dx) + 4f(0) + f(dx)) and then sum these up:
+
+see formula, difference is even/odd points are different, see code
+
+ERRORS ON INTEGRATION:
+rounding errors exist, but not maine error, rather it is
+
+Approximation Error: induced by linear/quadratic fit only approximates the true function f(x)
+choose a point on the functin x_k-1 and taylor expand about this point, then integrate to the next step x_k and we getan integral, 
+then do this again but taylor expand about x_k, and integrate over the same bounds, then we average the two expressions
+then sum over k for all slices and we find that the 
+
+int a to b f(x) dx = trapezoid rule + error, and this error is just the trapezoidal rule/approx for f'', integrating gives us the error:
+
+epsilon = 1/12 *  h^2 |f'(a)-f'(b)| + O(h^4) and all odd powers dissapear
+
+this tells us the accuracy of trapezoidal is error of order h^2 and simpsons is h^4 (so simpsons is a h^3 accurate fit) in some cases, simpsons can lead to higher error.
+
+This allows a practical estimation on errors, but depends on higher derivatives, thus need a more useful way to calc error, calc integral with N steps then 2N steps, and because we know how the error scales we can find the relation that: 
+
+epsilon_2 = 1/3 |I_2 - I_1|
+epsilon_2 = 1/15 |I_2 - I_1|
+
+for I_2 (integral with 2N steps) vs the actual value I. 
+
+The point of all this is to find the correct number of steps, that give accurate but fast answers with no useless steps that make answer no more accurate
+
+h small gives approximation error small, but h too small we introduce more roundoff error, thus an optimized number of steps exist, 
+equate both error sources approx ~ C int a to b f(x) dx where C is MP (10^-16) thus this generally gives 10^8 as optimal steps for trap and 10^4 for simpsons, implies simpsons is faster to get same level of accuracy, may be much more than generally is needed, this we need to practice 
+
+adaptive integration: not just choose # of slices, but to choose small number 10 or 20 then double and see what you get, then double and see what you get, and then at some point it will stop increasing and we can find the good number of steps, VERY USEFUL, if coded well use nested integration, so dont do all steps over again, calculate error, and can specify what error you want to stop at, most integrators are this method
+
+ROMBERG INTEGRATION: 
+Uses error estimates, and adaptive integration, to improve accuracy of the answer.
+Error for trapezoid is ch^2_i = I_i - I_i-1
+
+so we can write I = I_i + 1/3(I_i-I_i-1) + O(h^4) and thus now trapezoid is accurate to h^3. 
+
+can use this to correct for the previous correction, see slides, and get an answer accurate to whatever order for almost no cost, code to get subtractions right, but no new large calcs, this is the one to do, correct errors to your choice of accuracy (also computer/rounding etc).
+
+these get a bit tricky to write and doesn't always work, series exp in step size h, and if converges will give accurate correct answer, but if poorly behaved it does not. This is an example of Richardson extrapolation, works well for normal curves not rapildy oscillating/poorly behaved functions 
+
+Also exists higher order methods - denoted as Newton-Cotes where integrand is evaluated at evenly spaced points,
+
+int a to b f(x)dx = sum 1 to N w_k f(x_k), where w_k are specific weights based on order desired, not used much, we have accurate other methods
+
+NEW WAY TO DO INTEGRALS: 
+everything we have done above is evenly spaced evaluation methods, can we do better with other ways, yes, where we can choose points wisely, when doing this it is Quadrature
+
+Quadrature: 
+We primarily use Gaussian Quadrature, no Q is more accurate, but one quite close that allows nesting, we wil see later
+choose a set of nonuniform N points, x_k and want to develop integration with only value at f(x_k), see experimental data or something
+With N points we can always fit an N-1 polynomial 
+
+Interpolating Polynomial: 
+see slides for equation, when =m this is kronecker delta, and gives us: a discrete sum of the function and weights as the w_k int a to b phi_k(x)dx
+
+no closed form, but only have to calc over a specific range, so if many integrals over some range exist, than they will have the same weights, 
+
+thus we have method to eval weights, and seems to be that the best choice is: 
+
+Gaussian Quadrature formula in slides, best choice of weights, this is not that bad, but we get the ability to eval integral with small number of points
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
