@@ -56,3 +56,14 @@ def gaussxwab(N,a,b):
 
 
 #########################################################
+
+"""
+Use with: 
+
+from cwade_compmeth_cuny.gaussxw import gaussxwab
+
+x, w = gaussxwab(N, a, b)
+result = np.sum(w * f(x))
+
+
+"""
