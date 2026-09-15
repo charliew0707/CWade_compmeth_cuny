@@ -1,0 +1,34 @@
+LECTURE 5 NOTES: INTEGRATION CONTINUED AND DIFFERENTIATION
+
+homework notes - subject to change from the website, can move ahead but assignment/order may change
+note on strings, regular and f strings, also r string "raw string" useful to pass Latex script to plot labels
+
+Gaussian Quadrature:
+Oppose to Newton-Cotes, we now do not evenly space points, we use numerical interpolation integral and can slide these weights and points to our domain, and then just sum integral with weights. This is Quadrature, Gaussian Q means we use the Legnedre polynomials and zeros to find the weights, which is the Most accurate, but not most used method.
+
+Verfy effective with little points (tens of points work)
+see Gauss Quad code, can calculate error formally, but lots of algebra, error goes as c/N^2, where c is some constant, so going from 10 to 11 points gives a 100 fold increase in accuracy, to get error, add another point and take the difference between N=i and N=i+1 and take that (with N in the tens) as the full error. However, catch is that this is not able to be nested like in adaptive integration methods, means this is not used that much, so look for othe schemes
+
+How to Choose the Scheme: {Trap, Simp, Romb, Gauss}
+
+it depends, must make choices with strengths and weaknesses, higher order methods give better answer for well-behaved, not for non converging or highly oscillating, good to get a sense of what the integrand looks like, how many points may be adequate to describe it, even spacing or not, etc.
+
+INTEGRALS TO INFINITY:
+
+many integrals to infinity, cannot have steps as we will need infinite number of steps, if integrand happens to fall off may converge fast enough or more general way is with a conformal transformation (bilinear) and so let x -> z / z-1 over the domain [0,1] then dx -> 1/(1-z)^2 dz, also other transformations or can also see other transformations, or break up integral into sections
+
+MULTIPLE INTEGRATION:
+
+writing sums we just get the Gauss-Legendre product formula, I = dbl sum_ij w_iw_j f(x_i,x_j), so going to many integrals is almost trivial, we just do two sums, nothing special we just do the first integral and get F(y) = I_1 and then integrate that again, as all these in the computer are just arrays of numbers, nothing special about it coming from an integral 
+
+More complicated question is: IS THERE A BEST CHOICE
+
+this is when things get hard, open question, no known best solution, and so choosing the "best" points to evaluate any given integral is not definitive, this is where the science/art comes to get the best choice of points. Example is the Sobol sequence seems to give good results, another one is the Monte Carlo integration, which is random numbers in the space, and thus works well as a distribution (will come to in full later). Thus in higher dimensions can be complicated shapes, and various techniques, what does your function space look like.
+
+SCIPY.INTEGRATE 
+scipy has an integration subpackage with quad, quadrature, romnberg, Trapezoid and Simpson (see documentation) trap and simp work only on arrays not a function
+
+GAUSS-KRONROD QUADRATURE: 
+default integration method, quadrature but not legendre polynomials only, allows quadrature to be nested, just uses other polynomials to allow nesting, and error estimates. 
+
+See vocab list: trap, simp, newton cotes, romberg, gaussian quadrature, approx error
