@@ -1,0 +1,165 @@
+============================================================
+        PYTHON INTEGRATION CHEAT SHEET
+        numpy + scipy.integrate
+============================================================
+
+IMPORTS
+-------
+import numpy as np
+from scipy.integrate import (
+    quad,        # adaptive 1D
+    dblquad,     # adaptive 2D
+    tplquad,     # adaptive 3D
+    trapezoid,   # trapezoidal rule on data
+    simpson,     # simpson's rule on data
+    fixed_quad,  # fixed-order Gaussian quadrature
+)
+
+
+------------------------------------------------------------
+1. quad — adaptive 1D integral (most common)
+------------------------------------------------------------
+quad(func, a, b, args=(), limit=50)
+
+    func   : callable f(x)
+    a, b   : limits (float, ±np.inf allowed)
+    args   : extra args tuple passed to func
+    Returns: (result, abserr)  both float
+
+Example:
+    def f(x):
+        return x**4 - 2*x + 1
+
+    result, err = quad(f, 0, 2)
+
+
+------------------------------------------------------------
+2. dblquad — adaptive 2D integral
+------------------------------------------------------------
+dblquad(func, a, b, gfun, hfun, args=())
+
+    func   : callable f(y, x)  ← y first!
+    a, b   : outer (x) limits
+    gfun   : lower y limit — float or callable g(x)
+    hfun   : upper y limit — float or callable h(x)
+    Returns: (result, abserr)
+
+Example:
+    def f(y, x):
+        return x * y**2
+
+    result, err = dblquad(f, 0, 1, 0, 1)
+    # fixed bounds: x in [0,1], y in [0,1]
+
+    result, err = dblquad(f, 0, 1, 0, lambda x: x)
+    # y upper bound depends on x
+
+
+------------------------------------------------------------
+3. tplquad — adaptive 3D integral
+------------------------------------------------------------
+tplquad(func, a, b, gfun, hfun, qfun, rfun, args=())
+
+    func   : callable f(z, y, x)  ← innermost first!
+    a, b   : outermost (x) limits
+    gfun   : y lower limit — float or callable g(x)
+    hfun   : y upper limit — float or callable h(x)
+    qfun   : z lower limit — float or callable q(x,y)
+    rfun   : z upper limit — float or callable r(x,y)
+    Returns: (result, abserr)
+
+Example:
+    def f(z, y, x):
+        return x + y + z
+
+    result, err = tplquad(f, 0, 1, 0, 1, 0, 1)
+
+
+------------------------------------------------------------
+4. trapezoid — trapezoidal rule on sampled data
+------------------------------------------------------------
+trapezoid(y, x=None, dx=1.0, axis=-1)
+
+    y      : ndarray of function values
+    x      : ndarray of sample points (always pass this!)
+    dx     : uniform spacing if x not given
+    Returns: float or ndarray
+
+    Note: always pass x unless points are 1 unit apart
+
+Example:
+    def f(x):
+        return x**4 - 2*x + 1
+
+    x = np.linspace(0, 2, 1000)
+    y = f(x)
+    result = trapezoid(y, x)
+
+
+------------------------------------------------------------
+5. simpson — Simpson's rule on sampled data
+------------------------------------------------------------
+simpson(y, x=None, dx=1.0, axis=-1)
+
+    y      : ndarray (odd number of points = best accuracy)
+    x      : ndarray of sample points
+    Returns: float or ndarray
+
+    Note: more accurate than trapezoid for same n points
+
+Example:
+    x = np.linspace(0, 2, 1001)   # odd number of points
+    y = f(x)
+    result = simpson(y, x)
+
+
+------------------------------------------------------------
+6. fixed_quad — fixed-order Gaussian quadrature
+------------------------------------------------------------
+fixed_quad(func, a, b, args=(), n=5)
+
+    func   : callable f(x)
+    a, b   : finite limits only
+    n      : number of Gauss points (increase for accuracy)
+    Returns: (result, 0.0)  no error estimate
+
+Example:
+    result, _ = fixed_quad(f, 0, 2, n=10)
+
+
+------------------------------------------------------------
+CONVERTING f(x) TO ARRAY (for trapezoid / simpson)
+------------------------------------------------------------
+x = np.linspace(start, stop, n_points)
+y = f(x)     # numpy applies f element-wise automatically
+
+
+------------------------------------------------------------
+QUICK COMPARISON
+------------------------------------------------------------
+Method       Input        Error est.   Infinite limits
+-----------  -----------  -----------  ---------------
+quad         function     yes          yes
+dblquad      function     yes          no
+tplquad      function     yes          no
+trapezoid    data array   no           no
+simpson      data array   no           no
+fixed_quad   function     no           no
+
+
+------------------------------------------------------------
+TIPS
+------------------------------------------------------------
+- quad handles singularities and infinite limits — use it
+  as your default for 1D integrals over a function
+- trapezoid / simpson are for when you have measured data,
+  not a defined function
+- Always pass x to trapezoid/simpson unless dx=1
+- simpson needs odd number of points for best accuracy
+- np.float64 return type behaves like a regular float
+- Jupyter only shows last expression — use print() to
+  display multiple results in one cell
+- quad returns a tuple (result, err) — unpack with:
+      result, err = quad(f, 0, 2)
+
+============================================================

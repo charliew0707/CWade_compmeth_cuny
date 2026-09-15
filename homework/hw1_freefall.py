@@ -16,17 +16,41 @@ import argparse
 # add try and except to catch errors, zero division, unphysical inputs
 # add drag to calculation
 
+# Adding Planets
+PLANETS = {
+    "mercury": 3.7,
+    "venus"  : 8.87,
+    "earth"  : 9.81,
+    "moon"   : 1.62,
+    "mars"   : 3.72,
+    "jupiter": 24.79,
+    "saturn" : 10.44,
+    "uranus" : 8.69,
+    "neptune": 11.15,
+}
+
 # Function to calculate time for ball to fall from tower:
 
 def time_to_fall(h, g):
     return round(sqrt((2*h)/g),4)
 
 def main():
+    
     parser = argparse.ArgumentParser(description="Freefall Calculator")
-    parser.add_argument("height", type=float, help="Enter height of tower")
-    parser.add_argument("--gravity", type=float, default=9.8, help="Enter gravity of planet")
+    parser.add_argument("height", type=float, help="Height of tower in meters")
+    parser.add_argument("--gravity", type=float, default=None,
+                        help="Custom gravity value (m/s^2)")
+    parser.add_argument("--planet", type=str, default="earth",
+                        choices=PLANETS.keys(),
+                        help="Planet name (default: earth)")
     args = parser.parse_args()
-    print(f"{time_to_fall(args.height, args.gravity)} seconds")
+
+    # --gravity overrides --planet if both are given
+    g = args.gravity if args.gravity is not None else PLANETS[args.planet]
+
+    print(f"Height  : {args.height} m")
+    print(f"Gravity : {g} m/s^2")
+    print(f"Time    : {time_to_fall(args.height, g)} seconds")
 
 if __name__ == "__main__":
     main()
