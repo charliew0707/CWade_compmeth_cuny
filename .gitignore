@@ -1,2 +1,15 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.ipynb_checkpoints/
+*.ipynb_checkpoints
 .DS_Store
-.ipynb_checkpoints
+.AppleDouble
+.vscode/
+.idea/
+*.log
+*.tmp

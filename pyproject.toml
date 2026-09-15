@@ -1,19 +1,20 @@
 [project]
 name = "cwade-compmeth-cuny"
 version = "0.1.0"
-description = "Add your description here"
+description = "Computational Methods — CUNY (Charlie Wade)"
 readme = "README.md"
-authors = [
-    { name = "Charlie Wade", email = "charliew0707@gmail.com" }
-]
 requires-python = ">=3.13"
 dependencies = [
-    "matplotlib>=3.11.1",
-    "numpy>=2.5.3",
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "seaborn",
+    "astropy",
+    "pandas",
+    "pyscf",
+    "jupyterlab",
+    "ipykernel",
 ]
-
-[project.scripts]
-cwade-compmeth-cuny = "cwade_compmeth_cuny:main"
 
 [build-system]
 requires = ["uv_build>=0.12.9,<0.13.0"]
