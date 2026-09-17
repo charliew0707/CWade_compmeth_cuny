@@ -1,0 +1,110 @@
+LECTURE 6 NOTES: NUMERICAL DERIVATIVES AND INTERPOLATION
+
+Class leads to solving differential equations numerically, see calculus methods
+important ideas are order of error, steps, order of approximation etc, 
+
+just as important as integrals, but much easier, clear, less time, as most times we can get a derivative analytically
+not great numerically, subtraction of small numbers so hard to get accurate results
+
+PROCEDURE: 
+
+df/dx = f(x+h) -f(x) / h -> this is the forward difference method
+
+df/dx = f(x) -f(x-h) / h -> this is the backward difference method
+
+and generally do both and want both answers to be same/similar within error, 
+
+exception is continuity/endpoints, may only be able to do one way. 
+
+ERRORS: 
+taylor expand f(x+h) and we get f(x+h) = f(x) + hf' + 1/2h^2 f'' + ...
+
+and thus error is of order h, not good, and rounding error with subtraction cannot be neglected, with estimates, both errors combine to give: 
+
+epsilon = 2C abs f(x) / h + 1/2 h f'' thus we minimize this for h and find what it should be, roughly 10^-8 which would give 10^-8 error as well
+
+HIGHER ORDER METHOD: central difference is to instead of going up or down h, we go up h/2 and back h/2 around some point x of the function, is it more accurate? taylor expand and we get h^2 order of error, and so 10^-5 is best h, and gives error of about 10^-10
+
+SAMPLED FUNCTIONS/DATA: no f(x) we just have numbers, then it is spaced how it is, no choice in the matter, and thus have to do +h or -h, cannot do central difference, or could calc central difference between the points, and this can change accuracy, must think about the data and h. 
+In practice this is most important use of numerical differentiation. 
+
+See notes for practice, useful technique to now get numerical der of order 10^-10 accuracy, what about higher order?
+
+QUADRATIC FIT: -> this is just the central difference, same thing, can we try higher?
+
+FOURTH ORDER FIT: see slide for formula, use more points and weights and go higher and higher order, but then have to move to larger h, then have to worry
+
+SECOND DERIVATIVE: 
+just get g(x) = f'(x) and then compute the central difference again, what this gives is just
+f''(x) = f(x+h)-2f(x)+f(x-h) / h^2
+notce the accuracy is now reduced (due to the h^2) and so each new derivative approx error is worse by about h, and so too many are no longer accurate
+
+PARTIAL DERIVATIVES: 
+same idea as above, just hold the other variables constant, 
+f(x) = f(x+h/2,y) - f(x-h/2,y) / h and so on 
+
+NOISY DATA: 
+can make derivatives tricky as noise has large variance with derivative, thus must ask what you are doing, derivatives of noise are giant spikes back in forth when h is small, best way forward is to make h larger, and treat noise like a rounding error, and find valu ethat minimizes nise contribution, more common is to fit a curve to the data that smooths the noise, (in some way) and do derivative of the smooth function, other way is to fourier transform the data fit with sin/cosine, 
+
+DERIVATIVE FUNCTIONS: 
+np has gradient function (open ended on dimensions) in gradient(y,axis=0) and scipy has derivative(), see documentation
+
+
+
+INTERPOLATION: 
+ways to smooth data/functions etc, and calculate values in between sampled data, etc, makes numerics easier, 
+the approximation of the value of a function for points in between the values we do know. 
+
+Interpolation and fitting a function are not the same, 
+Interpoloation - seeks to fill in the info in some small region of a dataset
+Fitting a Function - attempts to model the data in an effort to understand the nature of the data more
+
+LINEAR INTERPOLATION: 
+take two points from data, and fit a line to them, equation for the line gives the interpolated data between those two points, far away gives bad results, line fit
+
+QUADRATIC FIT: 
+choose 3 points and get the quadratic fit between those 3 and thats your quadratic, can now go above or below the actual points in between the points, and this can be not physical, overshooting or undershooting, any order beyond linear has this problem
+
+LAGRANGE INTERPOLATION: 
+see gaussian quadrature phi polynomial, and of order of the number of points you have, guaranteed to go through all points, but may be better may not, can lead to wild oscillations at end points, this is Runge phenomena, the fit to the function is good, but the derivative can vary wildy, 
+
+SPLINES: 
+match derivative of functions at endpoints, most common is cubic, but can be any quad or higher order, and what it does is fit a different function for each piece of data, tries to fit the points, but also forces cubics to match the derivatives, and amtch derivatives when they connect, thus not one function, but can match better. Also visually the best choice, prone to overfit, gives constraints (12) and derivative at endpoints is 0, and do algebra to get a linear equation (see slides) and can be solved with lin algebra on computer (see next section), may not be most accurate, but best for plotting and graphics applications, 
+
+METHODS: 
+numpy.interp is a linear interpolation and scipy.interpolate has many functions to call for interpolation, see documentation, and can have many customized feature stuff to use to interpolate for whatever need
+
+Vocab: 
+Interpolation, Lagrange Interpolation, Interpoloating Polynomial, Spline
+
+
+
+LINEAR EQUATIONS:
+now we can de elementary calc numerics, and want to shift to linear equations, above will come back for DE and PDE's. 
+computers are really good at linear equations, for humans its tedious and easy to make mistakes, think large matrix calc etc. 
+we look at lin algebra on computers (notes many packages exist) active area of new software is in clever ways, brute forcing high matrices is large runtime, are there other ways to get the results. We see methods with no approximations, or approx methods with error but known error and faster method. 
+
+SYSTEMS OF LINEAR EQUATIONS: 
+Can always represent as a matrix equation Ax = v
+one way to solve is to invert matrix x = A^-1 v 
+numerically this is not efficient and sometimes complicated, so we look for other methods that are better numerically
+
+GAUSSIAN ELIMINATION: 
+most straightforward way to get solution: 
+rules: * any row by constant 
+        add or subtract any row of A a multiple of any other row and same for v, 
+then equality is still true, and we solve the system. Works by rearanging A to be adn upper triangle matrix, via the rules above, that is a matrix with all zeroes below the diagonal. See example case in slides. This essentially makes a new eq A'x=v', but where A' is an upper right triangle matrix and that is solvable easily. Use backsubstitution to solve. ie solve from x_N back to x_0, for x of dimension N. Takes practice to work and get mental picture of 2d arrays, see class slides examples for next time, some time doing the problem. See exercise 6.1, very worth it. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
