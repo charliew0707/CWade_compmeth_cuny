@@ -1,0 +1,71 @@
+LECTURE 6 NOTES: SOLUTIONS OF LINEAR EQUATIONS, NONLINEAR EQUATIONS
+
+Last time we saw Gaussian elimination, and now know how to code it with two for loops, this works, and can add a pivot (swap rows) if any leading zero. However this is not used. In practice we will use the libraries that instead follow a different method: 
+
+LU Decompomsition:
+idea - start with a matrix A, and find the matrix that performs the gaussin elim for us, such that L_0 A = B, and iterate L_i as many times to get an upper and a lower triangle matrix gets us to solve for the given equation. See slides. 
+
+Above is best way to solve, and we can do it with any v, so can move on. 
+
+INVERSE:
+AX = I, so we just use the same as above except our solve and v is the identity, also an inv method in the linalg package of numpy. 
+
+THE IMPORTANCE: 
+the interesting parts of computational linear algebra, are when matrices are very large, and the computational cost grows very quickly. So the questions to ask is do we solve the whole matrix, or is there a region or a band of important numbers in the matrix where many elements off diagonal are zero. So we label two types of matrices:
+
+TRIDIAGONAL: 
+only element nonzero are diagonal or +- one from the diagonal
+
+BANDED: 
+more than one diagonal strip off the diagonal, these are the bands, if they still have a lot of zero elements.
+
+this is when numerics gets important, can we solve or approximate just the bands or the diagonal, is it good, etc, and many times gauss elim is better than LU decomp
+
+EIGENVALUES/EIGENVECTORS:
+Av = lambda v we solve with the QR Algorithm, the idea is different, and it is not an exact solution, it is an approximate solution.
+method decompose A into an orhtogonal O and upper triangular R and use some tricks to redefine and decompose A, using A_k = (Q_i...))^T A (Q_i...) and doing this k times it was shown that A_k will become diagonal, which is approximately the solution, with some error epsilon on the off diagonals. This is the algorithm used in lin alg with eigh() and eigvalsh(), and can sometimes be tedious still with debugging errors, etc. 
+
+for practice see exercise 6.8., we work quickly through linalg becuase numerically not that interesting, approximate and iterate solutions to matrix equations using librries, these two approaches cover most of anything in linalg you will come across. Major libraries and fundamental in numerics, across all fields, most developed of all libraries and making this quick and well done is out there, still worries about speed and getting to more matrices, also data sets and machine learning are built on arrays, hard to program yourself, lean on others in cs/machine learning, scientific coding uses them. 
+
+Terminology: Gaussian Elim, LU Decomp, Tridiagonal Matrix, Banded Matrix, QR Algorithm
+
+
+
+
+NONLINEAR EQUATIONS: 
+methods of solving nonlinear equations, relaxation, bisection, and Newton's method, also max and mins of functions
+
+with linear equations as long as it is not underdetermined we can solve the equations. Nonlinear equations are much more difficult, with no guarantee of an analytical solution, must go to numerics. More open questions since we dont know an answer to compare to.
+
+EXAMPLE:  x = 2 - e^(-x)
+
+RELAXATION METHOD:
+need an equation where the variable is equal to something with the variable itself, ie allows for recursion, we basically just guess and iterate over guesses of x values, and then set next x value as the x we got from the previous do this until difference is small and we have relaxed x to find the solution ( a solution may have more with other guesses), many problems but fast code, need to write as x = f(x), multiple solutions are found blindly from starting guess unless you have an idea of the range of the answers, sometimes x will oscillate not converge to a numerical solution. 
+
+EXAMPLE: x = e^(1-x^2)
+this we can see 1 is a clear solution of, but when we use relaxation it oscillates wildly, we can try to transform the equation by taking the log and using relaxation on the same equation rewritten with a sqrt due to log, and we get that it works, why?
+
+see taylor series to first order at some x near the solution, and what happens is our guesses converge or not dependent on the deriviative being greater or less than 1, method does not work if equation cannot be converted, etc. can expand this method to many variables, if the equation can still be written as x = f(x,y) and y = g(x,y). Other methods do not extend as easily, and that becomes the difficult part of many of these methods.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
