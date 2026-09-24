@@ -1,0 +1,87 @@
+LECTURE 8: NONLINEAR METHODS CONTINUED
+
+BISECTION:
+rearrange the eqution to the form f(x) = 0 and solve for the roots, ie a root finding algorithm. 
+On one side of the root f(x)>0 and the other f(x)<0, and thus if we find these two starting points they must bracket the root.
+Start with x1 and x2, where f(x1)>0 and f(x2)<0, so we know there exists a root between then. So let's guess at their midpoint.
+If the midpoint is positive or negative, we then update the corresponding side to that value, and thus cut the search area in half. 
+Do this and replace until numbers are too close together. Oppose to relaxation, this brackets the root and thus will always be getting closer to a root.
+
+Algorithm:
+choose x1, x2, check f(x_i) are opposite signs, 
+calc the midpoint, mid, f(x3), and check sign, use to update to x1 or x2 and repeat. 
+improves exponentially, steps are N = log_2(Delta/epsilon), and continuous function must have a root between +/- values.
+
+Fails:
+If the starting values are not opposite signs it will fail. Could mean no root, bad choice, or function just touches zero does not cross. Also only works with 1D functions. Finding min/max of function can help.
+
+NEWTON'S METHOD:
+just take a point of the function. Calc the derivative, and approximate the function as a tangent line at that point. Then update the new x, to the point where the tangent line touches the line. Repeat to some steps and get to the root. Thus basically the equation:
+
+x' = x-delta(x) = x - f(x)/f'(x)
+
+requires us to know the derivative or be able to calculate it. Above is the algabraic relation of the geometric idea above. If we can get derivative exaclty, this is the best method, converges quadratically. Error decreases by epsilon^2 with each step, very fast, and almost assume no error.
+
+Fails:
+We need to calculate the derivatives, and the method doesn't always converge. The term f(x)/f'(x) means that if f'(x) gets really small, this can blow up and not converge, pushing farther away from the root. Think local minima, so may work with new starting guess, and can always evaluate the function at certain points, try an plot to know info about it. If we plot, say np.where gives roots, but computatationally expensive and can get better acc with method.
+
+SECANT METHOD:
+If you have a function, use it to do the derivative, like in the polynomial case. If you cannot, you must do a numerical derivative, which is not as accurate, best is 10^8 accuracy. This is: 
+
+f'(x) = f(x2) - f(x1) / x2 - x1
+
+and thus the new Newton formula is: 
+
+x3 = x2 - delta = x2 - f(x2) * x2 - x1 / (f(x2) - f(x1))
+
+This extends to higher dimensions nicely, oppose to bisection, we can do relaxation or more commonly Newton. Given N variables and N equations, taylor expand all, and we get a vector equation, thus this just becomes a matrix equation of derivatives, a bit more work, but use lin alg to solve. Matrix nabla f = partial_i f / partial x_j, solve for 
+nabla f * del x = f(x) an update guess. 
+
+MINIMA AND MAXIMA: 
+closely related to root finding, we normally find derivatives and set to 0, this gives the min/max of the function for all i. What we have been using. What if we can analytically solve deriviative. 
+
+GOLDEN RATIO SEARCH: 
+similar to bisection, where two points bracket a root, we now take four unevenly spaced points, and basically eval to the lower value, always bracketing the minima/maxima of the function. How to choose points? 
+
+x2 and x3 should be symmetric about the center of x1 and x4, and want range to decrease as quick as possible, thus define z as a ratio between intervals and the two steps 
+
+z = x4 - x1 / x3 - x2 = x2-x1 / x3-x1 + 1
+
+and step 2 has ratio: 
+
+z = x3-x1 / x2 - x1, set equal and solve z^2 - z -1 = 0, gives the golden ratio z= (1+sqrt 5 )/ 2
+
+Algorithm: 
+See slidesm and code up. 
+
+Fails similar to bisection, must bracket a root and only 1d functions. 
+Mofidy to Gauss-Newton and/or Gradient Descent, see slides for ideas and code.
+
+Vocab: Relaxation Method, Bisection Method, Newton Method, Secant Method, Golden Ratio Search, Gauss-Newton Method, Gradient Descent
+
+See HW: Lagrange Point Calculation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
