@@ -1,0 +1,67 @@
+LECTURE 9: PLOT ANIMATION AND FOURIER TRANSFORMS
+
+Housekeeping: Midterm in few weeks, know all terminology list and methods, start thinking about final project
+will use nonliner sol, linear eq, monte carlo, which use int and diff methods, must be interested in. Time of midterm have an idea/proposal. 
+Another added assignment, after midterm look at paper in some area of (astro)physics that uses a numerical technique, then explain to class methods used. (DFT, QMC, ?)
+
+See documentation for patches, add patches to graphs, and etc. use the pillowWriter library for animation. 
+just a series of pictures put together, but overall very expensive, we blackbox it, so use given library, and 
+create simple images to move around. Lives in matplotlib.animation, and you create a function that you pass the frame
+
+create list or array, and use that to iterate the function over the given images you want, so that we return the patch with updated coordinates.
+see example code and basically update to your data and situation, the stitch together to a movie is the animation library and mess with to get to work. Quick, easy, and informative animation, do not get lost in animation rabbit hole.
+
+
+FOURIER TRANSFORMS:
+general approaches for time and signal domains, great useful skill to sovle many things, including PDE's. Much larger idea than you think, much of the internet, data compression, etc runs of a fourier transform algorithm behind the scences. 
+
+Idea: any function or periodic can be represented by it's decomposition to an infinite sum of sin or cos over some boundary interval.
+f(x) = Sum _ k = 0 to inf a_k sin(2 pi kx/ L) for the region [0,L]. 
+
+Another way to express this is in the complex represesentation of sin/cos using sum - inf to inf of y_k e^(i[2pi kx/L]). Work for periodic functions, but we can repeat over a range and get a periodic function. 
+
+y_k is usually complex, general way to calc is with integral, see slides, and thus one integral for each y_k, then plug in to the infinite sum, only few functions where this solves easily for all k. So the limiting factor as of now is the coefficient calculation and that they are infinite, how do we deal? switch to numerics. We look at the discretized version. 
+
+DISCRETE FOURIER TRANSFORM: 
+swap integral for coefficients for a sum up to some number, thus discretizing the coefficients and not taking to inf, can thus evaluate the coefficients using programs like trap sum, or newton cotes etc. But this still is a numerical integral for each k up to some N in the sum. See slides it is typical to multiply y_k by N and define this as c_k. (see slides) just a normalization thing. This is not an approximation, it is an exact transform of those N points. These are not the exact function f(x) but there is no approximation after becoming discretized, so you get exact answer to machine precision, only deal with roudning error. Thus can do inverse DFT and get y_n or from y_n get c_k. Iff f(x) in Reals, then only need half of the calculated coefficients, ie only sum to N/2. Quite straightforward to implement. See code. 
+
+Note:
+Fourier transform can change dependent on region, so see slides, define type I and type II DFT based on region. 
+
+2D FT:
+same as above, same algorithm, but now the coefficents are a MxN ie y_mn and becomes a multi-dimensional array. 
+
+Above is all correct, and exact, but not used ever in practice, much quicker way using the Fast Fourier Transform. 
+
+General:
+A fourier transform breaks our function into a series of waves at different frequencies, coeeficients are the weights of any given frequency, a plot of abs values of coefficients |c_k| is a power spectrum and shows relative contr. of waves at each frequency. Can also then filter, by removing frequency (high or low) to overall function. Can then give a clean signal, if filtering out noise, could cut out high freqency to now deal with them, etc. This is all signal processing, but incredibly useful in physics. 
+
+Can also do just cosine/sin not full FT, but cosine is symmetric and so more useful to fit, sin starts/ends at zero so less common in physical situations. 
+
+Formula looks different but just code up the formula and get answer, different formulas for type I vs type II (endpoints vs midpoints). 
+
+Used all over in technology, images, videos, music, signal processing, as well as comp physics. Way to process, compress, analyze etc. Thus the take away is to use the libraries. 
+
+PROBLEM:
+The DFT is a nested loop, this grows as 1/2N^2 growth, so up to one billion computations this only gives 45000 sample points, so need better way. 
+
+FFT:
+Gauss solved in 1805, the method (easy) is to consider the sample points being some s = 2^m. Then break into even/odd sums, write down even half, and you still get a fourier transform, now with 1/2 points, basically doing a FT of every other point, then the odd terms can be written in a exp () Q_k, and can expand, these again to even and odd and again, and again, and this we get one big sum of N points, ie works by evaluating a coefficient for a single point, then two, then four, until you transform the whole function, this grows as Nlog_2 N, so a huge difference. More difficult code, but this is what the libraries built for us in np:
+
+Packages: 
+numpy.fft so we call with rfft() for real function and only pass y values to get the coefficients for a set of real sample points, or fft() for complex, and also have inverses with irfft() and ifft()
+
+can use this and fourier space, ie what you transformed the data to, to analyze etc, think phase space, fourier space, time domain etc. 
+and thus incredibly useful thing to do for all signals, data, etc. 
+
+
+
+
+
+
+
+
+
+
+
+
