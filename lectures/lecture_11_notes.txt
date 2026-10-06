@@ -1,0 +1,63 @@
+LECTURE 11: RANDOM PROCESSES AND MONTE CARLO
+
+Think back to the radioactive decay, where we have a probability function, dependent on the rng, of when particles decay. 
+Doing the simulations again and again give different results, but overall same trend. 
+
+NONUNIFORM RANDOM NUMBERS:
+Many probability distributions are not uniformly random. Consider radioactive decay again, we stepped in time and asked if it decayed or not, and found prob of decay in some step dt. 
+
+Now, what is the prob the atom survives until a given time t and decays between t and t + dt? this gives a nonuniform prob distribution. 
+Chance of decay decreases exponentially in time. A fast way to do this is to just calculate a time at which each atom
+decays. But to do so we need to sample from this nonuniform probability distribution. The way to see this is the transformation method. 
+
+TRANSFORMATION METHOD: 
+Suppose you have a probability density q(z) and supposed you have a function x(z). If z is a random number than x(z) is also
+a random number, but in general it doesn’t have the distribution q(z) it has a distribution p(x). Our goal is to choose x(z) so it has the distribution we want.
+➤ The probability of generating a value of x between x and x+dx is by definition equal to the probability of generating a value of z in the corresponding interval.
+➤ Let’s take q(z) to be the uniform distribution from 0 to 1.
+p(x)dx = q(z)dz
+➤ if we can do this integral and solve the resulting equation for x then we will have an expression that will give us what we
+want. Let’s try an example of an exponential pdf.
+➤ where the leading factor of μ is for normalization. Then plugging into the top equation we get
+Have to be able to do the integral, and has to be invertible. 
+
+GAUSSIAN RANDOM NUMBERS
+can we get random numbers from the Gaussian distribution? Transformation method fails as we cannot do the integral with the gaussian. So we need to be clever, to solve this, imagine we have two random variables, both drawn from a gaussian as x and y. Then get prob with a transformation to r and theta, (similar to solving Gaussian in 2d spherical trick) and thus we get the transformation of the Gaussian:
+
+r = sqrt (-2sigma^2 ln(1-z))
+
+and then transform back to x = rcos(theta) and y = rsin(theta), where theta is (0,2pi]. These are in np, but good to know general transformation to get correct distribution of any nonuniform distribution. 
+
+MONTE CARLO INTEGRATION:
+least efficient way of integration, but for many difficult problems this is the best method. 
+
+Consider : integral well behaved in middle but highly oscillating on the edges, see slides, many integral methods will oscillate and not converge, but the integral is well defined and fits on a graph in a 2 x 1 box (so upper bound is 2). This is the situation to use monte carlo. Idea: choose random points, if they are above the function, we dont count, if they are below we do count, and prob of point below the curve is p = I/A. With our sample points then the probaility of the points below gives p = k/N, solving the two equations then give. Solution for I = kA/N. See implemented code in exercises, not incredibly accurate or converging, see slides, binomial. Only usable if other methods do not converge, there is however a better Monte Carlo method, not much but better
+
+Mean Value Method: 
+Consider a general integral, 
+
+I = int a to b f(x) dx 
+
+the average value of f(x) is <f> = I / b-a , thus if we can guess <f>, we can guess the integral, via 
+
+I = b-a/N sum i to N f(x_i) still not incredibly accurate, error goes as N^-1/2. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
