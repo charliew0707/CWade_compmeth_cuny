@@ -1,0 +1,22 @@
+LECTURE 11: RANDOM PROCESSES AND MONTE CARLO
+
+Think back to the radioactive decay, where we have a probability function, dependent on the rng, of when particles decay. 
+Doing the simulations again and again give different results, but overall same trend. 
+
+NONUNIFORM RANDOM NUMBERS:
+Many probability distributions are not uniformly random. Consider radioactive decay again, we stepped in time and asked if it decayed or not, and found prob of decay in some step dt. 
+
+Now, what is the prob the atom survives until a given time t and decays between t and t + dt? this gives a nonuniform prob distribution. 
+Chance of decay decreases exponentially in time. A fast way to do this is to just calculate a time at which each atom
+decays. But to do so we need to sample from this nonuniform probability distribution. The way to see this is the transformation method. 
+
+TRANSFORMATION METHOD: 
+Suppose you have a probability density q(z) and supposed you have a function x(z). If z is a random number than x(z) is also
+a random number, but in general it doesn’t have the distribution q(z) it has a distribution p(x). Our goal is to choose x(z) so it has the distribution we want.
+➤ The probability of generating a value of x between x and x+dx is by definition equal to the probability of generating a value of z in the corresponding interval.
+➤ Let’s take q(z) to be the uniform distribution from 0 to 1.
+p(x)dx = q(z)dz
+➤ if we can do this integral and solve the resulting equation for x then we will have an expression that will give us what we
+want. Let’s try an example of an exponential pdf.
+➤ where the leading factor of μ is for normalization. Then plugging into the top equation we get
+Have to be able to do the integral, and has to be invertible. 

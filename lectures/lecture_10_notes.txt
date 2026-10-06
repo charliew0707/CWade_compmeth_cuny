@@ -1,0 +1,67 @@
+LECTURE 10: RANDOMNESS AND MONTE CARLO
+
+Midterm Oct 22nd, think now about final project
+HW_4: Fourier analysis - time-series analysis where we use a fits file (astro data format) use a built in reader
+choose a star, choose epoch with clear good clean data, and fourier transform and plot the power spectrum, can you remove noise? 
+check a new region and see if the result is similar?
+* TESS data is almost evenly spaced, and FFT needs evenly spaced, but close enough spacing gives something close enough to the correct answer, 
+you do have the x values from the data, and you can find where a mixing x value is, then need to give a reasonable guess for y, interpolate a value, and do this, this is not a huge fix for TESS data, but for other samplings etc is a large part of dealing with astro data. 
+
+look for paper with numerical treatment of some problem, notice language, methods, etc. 
+
+RANDOM PROCESSES:
+Can we or a computer produce random numbers? turns out not entirely, so instead computers create pseudorandom numbers. Appear random, sample the range randomly, but via a sometimes hidden deterministic formula. Consider a random number generating formula:
+
+x' = (ax+c)mod(m) and if you choose a = 1664525 and c = ... and m = ... the x's that come out appear randomly generated in the sample area. However, they are determined as if you start with the same number, the same pattern of randomness ie the same random numbers will appear. This is called the Linear Congruential Random Number Generator. Produces psuedorandom numbers from 0 to m-1. See slides for specific a,c,m that work best, not all work well for random numbers. Thus have to be slighly careful, depends on your need for how random you need the numbers to be. For dice, this may work, for a large ML process and statistical analysis this will not give trustworthy results. 
+
+Original choice of x is called the Seed, and knowing this makes the random numbers fully deterministic, this is very important for testing code with random numbers. So, keep a seed in to get code to run, try many seeds, and then when it all works, take away the seed so that you return to random results.
+
+The method above is a good learning example, however for most uses, even in physics, it is not random enough. Need more sophistication. With advanced computers these not random enough numbers can introduce correlations into the results due to the nonrandom patterns. 
+
+We lean on others, for a while it was the Mersenne Twister, now np has a new algorithm for generating the random numbers. Also a random package. We typically use the np subpackage as it returns np arrays, random does lists. 
+
+RANDOM NP PACKAGE: 
+We use the subpackage numpy.random. In order to start you create an instance of a random number generator:
+
+rng = default_rng(seed=1234) #creates an instance of the generator
+rng.random(size=2) #Returns 2 random floats f, where 0 <= f < 1
+rng.integers(low=0,high=10,size=5) #Returns 5 integers between 0 and 10
+rng.choice(a) #returns a random choice from the array a
+
+The package also contains functions that return numbers from distributions other than the uniform distribution.
+The same seed will give the same pseudorandom order of numbers. Many other methods for generators, important to define what numbers and what it means to be random. Default random() return a random number from 0 to 1, can multiply to change to range. Can also call ints, 
+
+CRYPTOGRAPHY:
+very important for any security over the the internet, have to hide numbers, details, etc from all online devices. Must have fancy ciphers, codes, etc. 
+We can do this well with random numbers, as they are random, but the seed unlocks what they are. 
+
+PROBABILITY:
+What do we do with random numbers? One is we generate probability events, think video poker games, to shuffle and deal cards you use a random number generator. Games need random elements, and physics also needs a realization of probability and a model of randomness for certain physics processes. Think radioactive decay, brownian motion, statistical physics. The highest level of random numbers comes from radioactive decay by recording decay processes. 
+
+See decay code, good practice. Each time you run the graph will have slightly different wiggles, that is the randomness. We create a model of what happens based on random numbers. Analyzing these models and using them are Monte Carlo Methods. 
+
+MONTE CARLO METHODS:
+Ulam (mathematician) went through not the theory of winning solitaire, but rather played 100s of games and seeing how many times he, given the dealt cards, won. This is a statistical approach by running what happens using the random numbers, to study the process. It is a difference in techique. Can we mimic what happens? If we can can we run it and see what happens if we run it many many times, and analyze the distribution of what happens. Solving probelms by doing the experiment on the computer, not theoretically solving the model. 
+
+Exercise 2: more radioactive decay. See exercises, idea is that it can quickly solve these models when pen and paper would be a large amount of work. Shows power of monte carlo, sample prob of everything happening, and can analyze the results. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -60,6 +60,7 @@ import matplotlib.pyplot as plt
 from astropy import constants as c
 from scipy.optimize import newton
 import argparse
+from scipy.optimize import brentq
 
 # Constants (all floats, all in SI base units: meters, kilograms, seconds)
 
@@ -86,14 +87,25 @@ def poly_prime(r):
 
 
 
+def fallback_root(func):
+    # f changes sign on [0.5R, 0.99R], and only the physical L1 root lies there
+    return brentq(func, 0.5*R, 0.99*R, xtol=1e-3)
+
 # Function that does Newton's method, input func, initial guess, acc etc, and expected roots
 # Will build 3 methods, 1 Newtown scratch, 2 Newton with np 3 Secant
 
-def newton_scratch(func,func_prime,r=3.3e8,delta=1,eps=1e-11,steps=1000):
+def newton_scratch(func,func_prime,r=3.3e8,eps=1e-3,steps=1000, history=None):
+    """
+    newton-cotes method for roots, built with no libraries, has history to pass to plots
+    """
+    if history is not None:
+        history.append(r)
     for _ in range(steps):
 
         delta = func(r) / func_prime(r)
         r -= delta
+        if history is not None:
+            history.append(r) 
 
         if abs(delta)<abs(eps):
             return r
@@ -101,22 +113,77 @@ def newton_scratch(func,func_prime,r=3.3e8,delta=1,eps=1e-11,steps=1000):
         return None
     
 
-def secant_method(func, x1=3.3e8, x2=3.1e8, eps=1e-11, steps=1000):
+def secant_method(func, x1=3.3e8, x2=3.1e8, eps=1e-3, steps=1000,history=None):
+    """
+    Secant method for roots, built with no libraries, has history to pass to plots
+    """
+    if history is not None:
+        history.extend([x1,x2])
     f1 = func(x1)
     for _ in range(steps):
         f2 = func(x2)
         delta = f2 * (x2 - x1) / (f2 - f1)
         x1, x2 = x2, x2 - delta
         f1 = f2   
-
+        if history is not None:
+            history.append(x2)     
         if abs(delta) < eps:
             return x2
     return None
 
 
-def newton_method(func, func_prime, x0, eps=1e-11, steps=1000):
-    root = newton(func, x0, fprime=func_prime, tol=eps, maxiter=steps)
-    return root
+def newton_method(func, func_prime, x0, eps=1e-3, steps=1000,history=None):
+    """
+    newton-cotes method for roots, built with libraries, has history to pass to plots
+    """
+    def tracked(x):
+        if history is not None:
+            history.append(x)
+        return func(x)
+    try:
+        return newton(tracked, x0, fprime=func_prime, tol=eps, maxiter=steps)
+    except RuntimeError:
+        return None
+
+
+# Plot functions, I used claude to help make cleaner plots
+
+def plot_system(r):
+    theta = np.linspace(0, 2*np.pi, 400)
+    km = 1e3   # plot in kilometers
+
+    plt.figure(figsize=(7, 7))
+    plt.plot(R*np.cos(theta)/km, R*np.sin(theta)/km, "k--", lw=0.8, label="Moon's orbit")
+    plt.plot(r*np.cos(theta)/km, r*np.sin(theta)/km, "r:", lw=0.8, label="Satellite orbit")
+    plt.plot(0, 0, "bo", markersize=14, label="Earth")
+    plt.plot(R/km, 0, "o", color="gray", markersize=8, label="Moon")
+    plt.plot(r/km, 0, "r*", markersize=15, label=f"L1 ({r/km:,.0f} km)")
+
+    plt.axis("equal")
+    plt.xlabel("x (km)")
+    plt.ylabel("y (km)")
+    plt.title("Earth-Moon-satellite system (body sizes not to scale)")
+    plt.grid(True, alpha=0.3)
+    plt.legend(loc="upper right", fontsize=9, framealpha=0.9)
+    plt.tight_layout()
+
+
+def plot_convergence(history, r, label):
+    err = np.abs(np.array(history) - r)
+    err = err[err > 0]
+
+    plt.figure(figsize=(7, 4.5))
+    plt.semilogy(range(len(err)), err, "o-", lw=1.5)
+    plt.xticks(range(len(err)))          # whole-number iteration ticks
+    plt.xlabel("Iteration")
+    plt.ylabel("|x_n - r_final| (m)")
+    plt.title(f"Convergence: {label}")
+    plt.grid(True, which="both", alpha=0.3)
+    plt.tight_layout()
+
+
+
+
 
 
 # need a argparse function to allow CLI inputs, set guesses to good default values, and newt for def meth:
@@ -124,7 +191,7 @@ def newton_method(func, func_prime, x0, eps=1e-11, steps=1000):
 def parse_args():
     parser = argparse.ArgumentParser(description="Solve for the L1 Lagrange point.")
     parser.add_argument(
-        "--method", choices=["newton_scratch", "secant_method", "newton_method"], default="newton_method", 
+        "--method", "--m", choices=["newton_scratch", "secant_method", "newton_method"], default="newton_method", 
         help="Enter root method: newton_scratch, secant_method, newton_method"
         )
     parser.add_argument("--x1", type=float, default=3.5e8, help="Enter starting guess in meters, between earth and moon")
@@ -134,21 +201,36 @@ def parse_args():
 # main to run the code, use argparse call to choose method, metho returns the root closest to initial guess:
 def main():
     args = parse_args()
+    history = []
 
     if args.method == "newton_scratch":
-        r = newton_scratch(poly, poly_prime, args.x1)
+        r = newton_scratch(poly, poly_prime, args.x1, history=history)
 
     elif args.method == "newton_method":
-        r = newton_method(poly, poly_prime, args.x1)
+        r = newton_method(poly, poly_prime, args.x1, history=history)
 
     elif args.method == "secant_method":
-        r = secant_method(poly, args.x1, args.x2)
+        r = secant_method(poly, args.x1, args.x2, history=history)
 
-    # Nicer output with useful info, units and etc attached as all calcs in SI so r is always meters
-    print(f"Method: {args.method}")
+    method_used = args.method
+    
+    # if bad guess, all functions return None, so below defaults to a bisection, to bracket the root and find in physical region
+    used_fallback = False
+    if r is None or not (0 < r < R):
+        print(f"Warning: {args.method} failed or gave a non-physical root; using brentq fallback.")
+        r = fallback_root(poly)
+        method_used += " -> brentq fallback"
+        used_fallback = True
+
+    print(f"Method: {method_used}")
     print(f"Starting guess(es): x1 = {args.x1:.3e}" + (f", x2 = {args.x2:.3e}" if args.method == "secant_method" else ""))
     print(f"L1 distance from Earth's center: r = {r:.6e} m  ({r:.5g} m)")
     print(f"Fractional distance toward Moon: r/R = {r/R:.4f}")
+
+    plot_system(r)
+    if not used_fallback:
+        plot_convergence(history, r, method_used)
+    plt.show()
 
 if __name__ == "__main__":
     main()
