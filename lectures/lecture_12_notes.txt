@@ -1,0 +1,94 @@
+LECTURE 12 NOTES: MONTE CARLO AND RANDOM PROCESSES
+
+Examples were fine, but more physics functionality of Monte Carlo is in higher dimensions.
+Other methods required us to sample many values of the integrand, and so computational cost can grow very quickly with dimension
+On the oher hand, generalizing Monte Carlo formula (mean value) to many dimensions just amounts to promoting the scalar f(x_i) to a random vector in the volume of len(D) such that f(r_i). Thus the equation is 
+
+I = V/N Sum i = 1 to N f(r_i), 
+
+which is the common formula used in finance/trading to model a portfolio (many dimensions to integrate over and sample).
+
+PROBLEMS:
+when the integrand contains a divergence, sometimes doesnt work well, even if the integral can be finite, an example comes up in Fermi Gasses, where the integrand is: 
+
+x^-1/2 / e^x + 1 dx
+
+which diverges at 0, and thus choosing a random sampling of points, any near 0 will be near infinite and give divergent terms, you will get large variations in the samplings and thus monte carlo does not do well, even adding more points, the ones near zero will be much larger than any of the rest. 
+
+To get around, choose x to NOT be uniformly distributed, which is IMPORTANCE SAMPLING. 
+The idea is to choose sampling not uniform over the integrand and the bounds, this amounts to adding a weight function to the average, and to get a weighted average, which can be manipulated to get I = <f(x)/w(x)> int a to b w(x) dx . 
+We must add more to make a probability function p(x) = w(x) / int a to b w(x) dx and keep going to get that the full formula (see slides for derivation) of importance sampling, gives: 
+
+I = 1/N Sum 1 to N f(x_i)/w(x_i) int a to b w(x) dx
+
+and can choose different weight functions. The goal above was to remove the problematic (divergent around 0) part of the integrand. 
+
+METROPOLIS ALGORITHM: 
+Use statmech as our model of the world, the idea is to think about how we would code statistical mechanics, the entire course is essentially our system is an ensemble that moves between states, the probability of being in any given state is: 
+
+P(E_i) = e^-Beta E_i / Z where Z = sum _i e^-Beta E_i 
+
+Where Beta = 1 / (k_B T). The average value of the quantity X is then given as <X> = Sum_i X_i P(E_i).
+
+Often, we cannot calculate this sum analytically, too many states, and too many samples for other methods, so we lean on Monte Carlo, however, random states will mostly be exponentially suppressed, as the Boltzmann prob is an exponential, so most states are exponentially small. SO we want to choose or weight the energies that are more probably, see Importance Sampling above. Define the weighted average, and we get an expression for the average value of x as: <X> = 1/N Sum_k to N X_k P(E_k)/w_k (Sum_i w_i) ; second sum over all states, so better to do analytically if possible. 
+
+BETTER WAY:
+An alternative (and more physical) way of thinking about this approach is to think about the Monte Carlo as the behavior of an
+actual system.
+If we had some physical system it would start off in some initial state. Then it would move to another state with a probability given
+by Boltzmann. It would then keep changing states, each time with a probability related to its Boltzmann distribution.
+If we measured a quantity for the system we would get an average of the values that quantity has over the states the system has been in
+while we performed our measurement.
+Thinking of it this way importance sampling is just physically modeling what the system might do in an actual physics experiment. Thus StatMech is just Monte Carlo and we view that as the actual physical system going state to state given some random but sampled distribution. 
+
+Z:
+The important piece here is that our prob is divided by the partition function Z, and this is a sum over all states, unless simple and analytic, it is a bottleneck, can we get around this? 
+
+MARKOV CHAIN:
+A way to do the calculation without knowing Z is a technique called Markov Chains, we need a certain number N of states we can average over (not all states). Our goal is to have a set of states for the sum to get the average, we do this by generating a sequence of states, this is our chain. 
+
+ALGO: 
+Start at some random state i, and "walk around" and find the other nearby states, thus make a small change of state i to j, with transition prob T_ij, if we choose our T the right way then we can ensure that the chance at ending up at any one state on the chain IS the Boltzmann probabilty. 
+
+How do we choose T_ij, we know SUM T_ij = 1, and must be related to the given prob distr that we are interested in. Thus: 
+
+T_ij / T_ji = P(E_j)/P(E_i) = (prob dist_j/Z)/prob dist_i/Z = prob (E_j -E_i), important that Z cancels out, and so if we can do the above, say with a given prob distribution, then we can get by without calculating ALL the states such as in getting Z. (Haven't shown convergence but it can be shown). 
+
+Many ways to choose the starting transition prob, the oldest way is the metropolis algo, others also exist see literature. 
+
+METROPOLIS AALGORITHM: 
+We start with some state i, and change one thing about its energy level at random to state j and then evaluate: 
+
+if E_j < E_i accept always P_a = 1 or E_j > E_i accept on condition of wanted prob dist, for Boltzmann : P_a = e^-Beta(E_j-E_i) 
+
+1. Choose a random starting state i.
+2. Choose a move uniformly at random from an allowed set of
+moves
+3. Calculate the acceptance probability Pa for the move.
+4. Randomly decide if the move is accepted in which case the state
+becomes j or is rejected in which case the state remains i.
+5. Measure the quantity of interest X for the current state and add it
+to a running total.
+6. Repeat from step 2.
+➤ When we have taken a large number of steps N, we take our
+running total and divide it by N to get <X>.
+
+This is most straightforward approach. Subtleties are that we must count moves to same state ie i -> i, other things to worry about like correclty sampling space, able to access all states, and no general way to know how many N steps to converge to correct prob. 
+
+See example for Monte Carlo of Ideal Gas
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
